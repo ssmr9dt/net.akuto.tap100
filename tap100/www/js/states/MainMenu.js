@@ -1,51 +1,47 @@
+/* global Akutonet */
 
-BasicGame.MainMenu = function (game) {
+Akutonet = Akutonet || {};
 
-	this.bg;
-	this.music = null;
+Akutonet.MainMenu = function(game) {};
 
-};
+Akutonet.MainMenu.prototype = {
+  init: Akutonet.commonInitialize,
+  
+  preload: function() {
+    const title_asset_path = "assets/images/logo.png";
+    this.game.load.image("logo", title_asset_path);
+  },
+  create: function() {
+    console.log("MainMenu");
+    
+    const gwx = this.world.centerX;
+    const gwy = this.world.centerY;
+    
+    Akutonet.BackgroundColorSet();
+    Akutonet.BackgroundImageSet();
+      
+    const title_sprite = this.game.add.sprite(gwx, gwy-gwy/2, "logo");
+    title_sprite.anchor.setTo(0.5,0.5);
+    
+    // const easy_button = this.game.add.button(gwx, gwy, 'button', function(){}, this, 1, 0, 2);
+    // easy_button.anchor.setTo(0.5,0.5);
 
-BasicGame.MainMenu.prototype = {
+    Akutonet.menuFont(gwx, gwy, "64px", "Easy", function(a){
+      const g = Akutonet.game;
+      g.camera.fade("#000000");
+      g.camera.onFadeComplete.add(function(){
+        g.state.start("Game");
+      },g);
+    });
 
-	create: function () {
-
-		this.music = this.add.audio('bgm');
-        this.music.loop = true;
-        this.music.play();
-
-		this.bg = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
-
-		var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5, 'Tap to Start!', {
-			font: '42px Arial', fill: '#ffffff', align: 'center'
-		});
-		text.anchor.set(0.5);
-
-		this.input.onDown.add(this.startGame, this);
-
-
-	},
-
-	update: function () {
-
-		//	Do some nice funky main menu effect here
-
-	},
-
-	resize: function (width, height) {
-
-		//	If the game container is resized this function will be called automatically.
-		//	You can use it to align sprites that should be fixed in place and other responsive display things.
-
-		this.bg.width = width;
-		this.bg.height = height;
-
-
-	},
-
-	startGame: function () {
-		this.music.stop();
-		this.state.start("Game");
-	}
-
-};
+    // (function(){
+    //   const g = Akutonet.game;
+    //   setTimeout(function(){
+    //     g.camera.fade('#000000');
+    //     g.camera.onFadeComplete.add(function(){
+    //       g.state.start("Game");
+    //     },g);
+    //   },1000);
+    // })();
+  }
+}
